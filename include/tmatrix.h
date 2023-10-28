@@ -3,7 +3,6 @@
 // Copyright (c) Сысоев А.В.
 //
 //
-
 #ifndef __TDynamicMatrix_H__
 #define __TDynamicMatrix_H__
 const int MAX_VECTOR_SIZE = 100000000;

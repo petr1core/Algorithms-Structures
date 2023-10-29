@@ -187,29 +187,29 @@ public:
     Rational operator+(const T& t) noexcept
     {
         Rational res;
-        res.nom = a.nom + t * a.dnom;
-        res.dnom = a.dnom;
+        res.nom = nom + t * dnom;
+        res.dnom = dnom;
         return res;
     }
     Rational operator-(const T& t) noexcept
     {
         Rational res;
-        res.nom = a.nom - t * a.dnom;
-        res.dnom = a.dnom;
+        res.nom = nom - t * dnom;
+        res.dnom = dnom;
         return res;
     }
     Rational operator/(const T& t) noexcept
     {
         Rational res;
-        res.nom = a.nom;
-        res.dnom = a.dnom * t;
+        res.nom = nom;
+        res.dnom = dnom * t;
         return res;
     }
     Rational operator*(const T& t) noexcept
     {
         Rational res;
-        res.nom = a.nom * t;
-        res.dnom = a.dnom;
+        res.nom = nom * t;
+        res.dnom = dnom;
         return res;
     }
     // Операторы вывода/ввода
@@ -504,7 +504,7 @@ private:
     TDynamicMatrix Minor( size_t r, size_t c) { // функция которая просто режет матрицу в соотв. с номером строки и столбца
         TDynamicMatrix res(sz - 1);
         for (size_t i = 0, ri = 0; ri < res.sz && i < sz; i++) {
-            for (size_t j = 0, cj = 0;ci < res.sz && j < sz; j++) {
+            for (size_t j = 0, rj = 0; rj < res.sz && j < sz; j++) {
                 if (j == c || i == r)
                     continue;
                 res[ri++][rj++] = pMem[i][j];

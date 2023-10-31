@@ -134,12 +134,58 @@ TEST(TDynamicMatrix, can_subtract_matrices_with_equal_size)
 	m1[1][1] = 1;
 	m2[1][0] = 1;
 	m2[0][1] = 1;
-	ASSERT_NO_THROW(m1 / m2);
+	ASSERT_NO_THROW(m1 - m2);
 }
 
 TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)
 {
 	TDynamicMatrix<int> m1(3), m2(4);
+	ASSERT_ANY_THROW(m1 - m2);
+}
+/// 
+/// 
+/// 
+/// 
+/// 
+TEST(TDynamicMatrix, ADDITIONAL_TEST_can_divivde_matrixes_with_equal_size)
+{
+	TDynamicMatrix<int> m1(2), m2(2);
+	m1[0][0] = 1;
+	m1[0][1] = 1;
+	m1[1][0] = 1;
+	m1[1][1] = 1;
+
+	m2[0][0] = 4;
+	m2[0][1] = 5;
+	m2[1][0] = 7;
+	m2[1][1] = 2;
+	ASSERT_NO_THROW(m1 / m2);
+}
+
+TEST(TDynamicMatrix, ADDITIONAL_TEST_cant_divivde_matrixes_with_not_equal_size)
+{
+	TDynamicMatrix<int> m1(3), m2(4);
+	for (size_t i = 0; i < m2.size(); i++)
+	{
+		for (size_t j = 0; j < m2.size(); j++)
+		{
+			m2[i][j] = (i*j) + i+j; //0 1 2   1 3 5    2 5 8 
+		}
+	}
+	ASSERT_ANY_THROW(m1 / m2);
+}
+TEST(TDynamicMatrix, ADDITIONAL_TEST_cant_divivde_matrixes_with_zero_determinant)
+{
+	TDynamicMatrix<int> m1(3), m2(3);
+	m2[0][0] = 1;
+	m2[0][1] = 2;
+	m2[0][2] = 3;
+	m2[1][0] = 1;
+	m2[1][1] = 2;
+	m2[1][2] = 3;
+	m2[2][0] = 10;
+	m2[2][1] = 20;
+	m2[2][2] = 30;
 	ASSERT_ANY_THROW(m1 / m2);
 }
 

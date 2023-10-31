@@ -11,17 +11,16 @@ const int MAX_MATRIX_SIZE = 10000;
 using namespace std;
 
 // Класс рациональных чисел
-template<typename T>
 class Rational
 {
-    T nom, dnom;
+    int nom, dnom;
 public:
     Rational()	noexcept
     {
         nom = 0;
         dnom = 1;
     }
-    Rational(T a, T b = 1)
+    Rational(int a, int b = 1)
     {
         if (b == 0) throw "cant divide by zero";
         nom = a;
@@ -42,7 +41,7 @@ public:
         srand((unsigned)time(nullptr));
         double t = (double)rand() / RAND_MAX * (end - begin) + begin; //RAND_MAX = 32767
         double t2 = (double)rand() / RAND_MAX * (end - begin) + begin;
-        set((T)t, (T)t2);
+        set((int)t, (int)t2);
     }
     int NOK(int a, int b)			// НОК - Наименьшее общее кратное
     {
@@ -67,11 +66,11 @@ public:
         }
         return a1 + b1;
     }
-    T get_nom()			// Метод получить числитель
+    int get_nom()			// Метод получить числитель
     {
         return nom;
     }
-    T get_dnom()			// Метод получить знаменатель
+    int get_dnom()			// Метод получить знаменатель
     {
         return dnom;
     }
@@ -79,7 +78,7 @@ public:
     {
         return nom / (double)dnom;
     }
-    void set(T a, T b)			// Функция установки числителя и знаменателя
+    void set(int a, int b)			// Функция установки числителя и знаменателя
     {
         if (b == 0) throw "cant divide by zero";
         nom = a;
@@ -98,68 +97,15 @@ public:
         return *this;
     }
 
-    // Арифметические операторы
-    Rational operator++() //пост
-    {
-        nom += dnom;
-        return *this;
-    }
-    Rational operator++(int none)
-    {
-        Rational old(*this);
-        nom += dnom;
-        return old;
-    }
-    Rational operator--() //пост
-    {
-        nom -= dnom;
-        return *this;
-    }
-    Rational operator--(int none)
-    {
-        Rational old(*this);
-        nom -= dnom;
-        return old;
-    }
-    Rational operator+=(const Rational& other)
-    {
-        Rational res;
-        res.nom = (nom * other.dnom) + (other.nom * dnom);
-        res.dnom = dnom * other.dnom;
-        return res;
-    }
-    Rational operator-=(const Rational& other)
-    {
-        Rational res;
-        res.nom = (nom * other.dnom) - (other.nom * dnom);
-        res.dnom = dnom * other.dnom;
-        return res;
-    }
-    Rational operator/=(const Rational& other)
-    {
-        Rational res;
-        res.nom = nom * other.dnom;
-        res.dnom = dnom * other.nom;
-        res.cut();
-        return res;
-    }
-    Rational operator*=(const Rational& other)
-    {
-        Rational res;
-        res.nom = nom * other.nom;
-        res.dnom = dnom * other.dnom;
-        res.cut();
-        return res;
-    }
-    Rational operator+(const Rational& b)
+    Rational operator+(Rational b)
     {
         Rational res;
         res.nom = (nom * b.dnom) + (b.nom * dnom);
         res.dnom = dnom * b.dnom;
         res.cut();
-        return res;;
+        return res;
     }
-    Rational operator-(const Rational& b)
+    Rational operator-(Rational b)
     {
         Rational res;
         res.nom = (nom * b.dnom) - (b.nom * dnom);
@@ -167,51 +113,24 @@ public:
         res.cut();
         return res;
     }
-    Rational operator/(const Rational& b)
+    Rational operator/(Rational b)
     {
         Rational res;
-        b.flip();
+        //b.flip();
+        res.nom = nom * b.dnom;
+        res.dnom = dnom * b.nom;
+        res.cut();
+        return res;
+    }
+    Rational operator*(Rational b)
+    {
+        Rational res;
         res.nom = nom * b.nom;
         res.dnom = dnom * b.dnom;
         res.cut();
         return res;
     }
-    Rational operator*(const Rational& b)
-    {
-        Rational res;
-        res.nom = nom * b.nom;
-        res.dnom = dnom * b.dnom;
-        res.cut();
-        return res;
-    }
-    Rational operator+(const T& t) noexcept
-    {
-        Rational res;
-        res.nom = nom + t * dnom;
-        res.dnom = dnom;
-        return res;
-    }
-    Rational operator-(const T& t) noexcept
-    {
-        Rational res;
-        res.nom = nom - t * dnom;
-        res.dnom = dnom;
-        return res;
-    }
-    Rational operator/(const T& t) noexcept
-    {
-        Rational res;
-        res.nom = nom;
-        res.dnom = dnom * t;
-        return res;
-    }
-    Rational operator*(const T& t) noexcept
-    {
-        Rational res;
-        res.nom = nom * t;
-        res.dnom = dnom;
-        return res;
-    }
+    
     // Операторы вывода/ввода
     friend ostream& operator<<(ostream& os, const Rational& z)
     {
@@ -229,12 +148,16 @@ public:
         return os;
     }
     // Логические операторы
-    bool operator==(const Rational& other) noexcept
+    bool operator==(Rational& other) noexcept
     {
         return (nom == other.nom && dnom == other.dnom) ? true : false;
 
     }
-    bool operator!=(const Rational& other) noexcept
+    bool operator==(int other) noexcept
+    {
+        return (nom == other && dnom == 1) ? true : false;
+    }
+    bool operator!=(Rational& other) noexcept
     {
         return (nom != other.nom || dnom != other.dnom) ? true : false;
 
@@ -407,7 +330,7 @@ public:
     {
         TDynamicVector res(*this);
         for (size_t i = 0; i < sz; i++) {
-            res.pMem[i] /= val;
+            res.pMem[i] = res.pMem[i] / val;
         }
         return res;
     }
@@ -502,7 +425,7 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
     using TDynamicVector<TDynamicVector<T>>::sz;
 private:
     TDynamicMatrix Minor( size_t r, size_t c) { // функция которая просто режет матрицу в соотв. с номером строки и столбца
-        TDynamicMatrix res(sz - 1);
+        /*TDynamicMatrix res(sz - 1);
         for (size_t i = 0, ri = 0; ri < res.sz && i < sz; i++) {
             for (size_t j = 0, rj = 0; rj < res.sz && j < sz; j++) {
                 if (j == c || i == r)
@@ -510,21 +433,39 @@ private:
                 res[ri++][rj++] = pMem[i][j];
             }
         }
-        return res;
+        return res;*/
+        TDynamicMatrix minor(sz-1);
+
+        for (int i = 0; i < r; i++)
+        {
+            for (int j = 0; j < c; j++)
+                minor[i][j] = pMem[i][j];
+            for (int j = c; j < sz - 1; j++)
+                minor[i][j] = pMem[i][j + 1];
+        }
+
+        for (int i = r; i < sz - 1; i++)
+        {
+            for (int j = c; j < sz - 1; j++)
+                minor[i][j] = pMem[i + 1][j + 1];
+            for (int j = 0; j < c; j++)
+                minor[i][j] = pMem[i + 1][j];
+        }
+        return minor;
     }
     T Determinant(TDynamicMatrix<T>& m) {
 
         if (m.sz <= 0 || m.sz >= MAX_MATRIX_SIZE)
             throw out_of_range("Vector size should be greater than zero and less than MAX_MATRIX_SIZE");
         if (m.sz == 1) return m.pMem[0][0];
-        if (m.sz == 2) return m.pMem[0][0] * m.pMem[1][1] - m.pMem[0][1] * m.pMem[1][0]; // возвращаем значение в случае размера 2
+        if (m.sz == 2) return (m.pMem[0][0] * m.pMem[1][1]) - (m.pMem[0][1] * m.pMem[1][0]); // возвращаем значение в случае размера 2
         else { // рекурсия если размер матрицы больше 2
             T res = T();
             for (size_t j = 0; j < m.sz; j++) // пройдёмся по эл-там первой строчки  (i = 0)
             {
                 TDynamicMatrix t(m.sz);
                 t[0][j] = m.pMem[0][j] * Determinant(Minor( 0, j));
-                res += t[0][j] * std::pow(-1, j) ;
+                res = res + (t[0][j] * std::pow(-1, j));
             }
             return res;
         }
@@ -657,10 +598,12 @@ public:
             for (size_t j = 0; j < con.sz; j++)
             {
                 con.pMem[i][j] = Determinant(Minor(i, j));
-                con.pMem[i][j] *= std::pow(-1, i + j);
+                con.pMem[i][j] = con.pMem[i][j] * std::pow(-1, i + j);
             }
         }
-        con = con.getTrspd() / Determinant(*this);
+        T det = Determinant(*this);
+        if (det == 0) throw "determinat equals zero, zero division error";
+        con = con.getTrspd() / det;
         return con;
     }
     TDynamicMatrix getTrspd() {
